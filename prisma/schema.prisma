@@ -12,7 +12,6 @@ datasource db {
 
 model Voter {
   walletAddress    String   @id @unique
-  name  String
-  passport  String @unique
-  hasVoted Boolean @default(false)
+  fullName  String
+  passportNumber  String @unique
 }

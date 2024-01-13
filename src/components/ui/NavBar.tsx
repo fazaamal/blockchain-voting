@@ -26,7 +26,7 @@ const NavBar = (props: Props) => {
       </Link>
 
       <div className=' absolute right-0 flex items-center'>
-        <p>Toggle Theme: </p>
+        <p className=' hidden md:visible'>Toggle Theme: </p>
         <Button onClick={toggleTheme} variant={'ghost'} className='mx-2 p-2 w-10 h-10 overflow-hidden'>
           {theme === 'light' ? <LuSun size={25}/> : <LuMoon size={25}/>}
         </Button>

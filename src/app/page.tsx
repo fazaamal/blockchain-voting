@@ -24,7 +24,7 @@ const HomePage = (props: Props) => {
             <Image src={acap} alt='dhani' className=' col-span-2 rounded-full h-full w-full object-cover mx-auto'/>
           </AspectRatio>
           <h1 className=' text-center font-normal'>
-            ACAP
+          ACAP
           </h1>
 
         </div>
@@ -47,11 +47,20 @@ const HomePage = (props: Props) => {
         </div>
 
       </div>
-      <Button className=' text-xl mx-auto mt-4 bg-orange-400' variant={'secondary'}>
+      <div className=' flex gap-2'>
+
         <Link href={'/login'}>
-          VOTE NOW
+          <Button className=' text-xl mx-auto mt-4 bg-orange-400' variant={'secondary'}>
+              VOTE NOW
+          </Button>
         </Link>
-      </Button>
+
+        <Link href={'/results'}>
+          <Button className=' text-xl mt-4' variant={'secondary'}>
+              LIVE COUNT
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 }

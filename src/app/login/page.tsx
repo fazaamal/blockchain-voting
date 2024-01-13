@@ -3,18 +3,82 @@
 import { metamask } from '@/assets/icons'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { useToast } from '@/components/ui/use-toast'
+import axios from '@/lib/axios'
+import { setAuthToken, setWalletAddress } from '@/lib/localStorage'
+import { connectAndSign } from '@/lib/web3'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
+import Web3 from 'web3'
 
 type Props = {}
 
 const Login = (props: Props) => {
   const {theme} = useTheme();
+  const [ web3, setWeb3 ] = React.useState<Web3|null>(null)
+  const { toast } = useToast();
+  const router = useRouter();
+
+  useEffect(()=>{
+    setWeb3(new Web3(window.ethereum))
+  }
+  , [])
+
+  const connect = async () => {
+    const auth = await connectAndSign(web3);
+    if(!auth) {
+      toast({
+        title: 'Error',
+        description: 'Authentication failed',
+      })
+      return;
+    }
+    let walletAddress = auth.walletAddress;
+
+    await axios.post('/login', {
+      authentication: auth,
+      walletAddress
+    }).then((res)=>{
+      setAuthToken(res.headers['authorization']);
+      setWalletAddress(walletAddress);
+
+      
+
+      axios.post('/contract/has-voted', {
+        walletAddress
+      }).then((res)=>{
+        if(res.data.hasVoted) {
+          toast({
+            title: 'Error',
+            description: 'You have already voted',
+          })
+
+          router.push('/results');
+        }else{
+          toast({
+            title: 'Success!',
+            description: 'Logged in successfully',
+          })
+
+          router.push('/vote');
+
+        }
+      })
+    }).catch((err)=>{
+      console.log(err);
+
+      toast({
+        title: 'Error',
+        description: err.message,
+      })
+    })
+
+  }
 
   return (
-    <div className=' absolute top-0 left-0 w-full h-full -z-10'>
       <Card className='relative w-80 mx-auto top-1/2 -translate-y-1/2'>
         <CardHeader>
           <h1 className=' text-center'>
@@ -22,7 +86,7 @@ const Login = (props: Props) => {
           </h1>
         </CardHeader>
         <CardContent className=' '>
-          <Button variant={'secondary'} className={(theme === 'light'?' bg-orange-200': ' bg-blue-600' )+ ' w-full'}>
+          <Button onClick={connect} variant={'secondary'} className={(theme === 'light'?' bg-orange-300': ' bg-blue-600' )+ ' w-full'}>
             LOGIN WITH METAMASK <Image className={' h ml-3 h-full w-min'} src={metamask} alt='metamask'></Image>
           </Button>
         </CardContent>
@@ -32,7 +96,6 @@ const Login = (props: Props) => {
           </p>
         </CardFooter>
       </Card>
-    </div>
   )
 }
 

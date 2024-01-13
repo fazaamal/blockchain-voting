@@ -4,6 +4,7 @@ import { Inconsolata, Montserrat } from 'next/font/google'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import NavBar from '@/components/ui/NavBar'
 import { MetaMaskProviderWrapper } from '@/components/providers/metamask-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 const host = typeof window !== "undefined" ? window.location.host : "defaultHost";
   
@@ -54,7 +55,11 @@ export default function RootLayout({
           >
             {/* <MetaMaskProviderWrapper> */}
               <NavBar />
-              {children}
+              <div className=' absolute top-0 left-0 w-full h-full -z-10'>
+                {children}
+              </div>
+
+              <Toaster />
             {/* </MetaMaskProviderWrapper> */}
           </ThemeProvider>
       </body>
