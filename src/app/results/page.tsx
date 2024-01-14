@@ -12,13 +12,13 @@ const Page = (props: Props) => {
   const [ voteCounts, setVoteCounts] = useState<VoteCountObject>();
 
   useEffect(()=>{
-    axiosInstance.get('/contract/vote-count').then((res:AxiosResponse)=>{
+    axiosInstance.get('/contract/vote-count?'+Date.now()).then((res:AxiosResponse)=>{
       setVoteCounts(res.data);
     })
 
 
     setInterval(()=>{
-      axiosInstance.get('/contract/vote-count').then((res:AxiosResponse)=>{
+      axiosInstance.get('/contract/vote-count?'+Date.now()).then((res:AxiosResponse)=>{
         setVoteCounts(res.data);
       })
     }, 2000)
