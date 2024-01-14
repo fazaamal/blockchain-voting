@@ -17,6 +17,8 @@ import Web3 from 'web3'
 
 type Props = {}
 
+export const fetchCache = 'force-no-store';
+
 const Login = (props: Props) => {
   const {theme} = useTheme();
   const [ web3, setWeb3 ] = React.useState<Web3|null>(null)

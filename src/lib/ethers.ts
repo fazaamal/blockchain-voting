@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const {abi} = config;
 
+export const fetchCache = 'force-no-store'
 // const wallet = new Wallet(process.env.PRIVATE_KEY as string, provider);
 const contractAddress= process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
 const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT as string);
