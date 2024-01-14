@@ -3,11 +3,10 @@ import { abi } from './abi/VotingSystemAbi.json';
 require('dotenv').config();
 
 // const wallet = new Wallet(process.env.PRIVATE_KEY as string, provider);
-const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT || 'http://127.0.0.1:7545');
-const votingContract = new ethers.Contract('0x22B8DdeC5B2aa48FFf10cA52cAD21E4e845b4a37', abi, provider);
-// console.log(contract.toggleVoting().then(res=>console.log(res)));
+const contractAddress= (process.env.NODE_ENV ==='development'?process.env.DEVELOPMENT_CONTRACT_ADDRESS: process.env.PRODUCTION_CONTRACT_ADDRESS ) as string;
+const provider = new ethers.JsonRpcProvider(process.env.NODE_ENV==='development'?process.env.RPC_ENDPOINT_DEV: process.env.RPC_ENDPOINT_PROD);
+const votingContract = new ethers.Contract(contractAddress, abi, provider);
 
-// export const ABI = abi;
 
 export class VotingContract {
   contract: ethers.Contract
@@ -15,7 +14,7 @@ export class VotingContract {
   constructor(privateKey: string){
     const wallet = new Wallet(privateKey, provider);
 
-    this.contract = new ethers.Contract('0x22B8DdeC5B2aa48FFf10cA52cAD21E4e845b4a37', abi, wallet);
+    this.contract = new ethers.Contract(contractAddress, abi, wallet);
   }
 
   async approveVoter ( walletAddress: string) {
