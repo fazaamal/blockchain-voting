@@ -48,6 +48,7 @@ const Register = (props: Props) => {
       passportNumber: ''
     }
   })
+  const [loading, setLoading] = useState(false);
   // const [isConnected, setIsConnected] = useState(false);
   // const [account, setAccount] = useState<string|null|undefined>(null);
   const [web3, setWeb3] = useState<Web3|null>(null);  
@@ -88,6 +89,8 @@ const Register = (props: Props) => {
   }
 
   const onSubmit = async (data: RegisterSchema) => {
+    setLoading(true);
+
     try{
       await axios.post('/register', {
         authentication: authObj,
@@ -164,7 +167,7 @@ const Register = (props: Props) => {
                   </FormItem>
                 )}
               />  
-              <Button className=' w-full mt-2' type="submit">Submit</Button>
+              <Button disabled={loading} className=' w-full mt-2' type="submit">{loading?'Loading':'Submit'}</Button>
             </form>
           </Form>
           {/* <MetaMaskProviderWrapper>

@@ -1,10 +1,13 @@
 import { AuthObject } from '@/app/types';
 import Web3 from 'web3';
 // import { ABI } from './ethers';
-
+import getConfig from 'next/config';
 import config from './abi/VotingSystemAbi.json'
 
 const abi = config.abi;
+
+const { publicRuntimeConfig } = getConfig();
+const { CONTRACT_ADDRESS_DEV, CONTRACT_ADDRESS_PROD, env } = publicRuntimeConfig;
 
 export const connectAndSign = async (web3: Web3|null): Promise<AuthObject | false> => {
   try {
@@ -41,7 +44,7 @@ export const vote = async (web3: Web3|null, name:string) => {
     
     if(accounts?.length === 0 || !accounts) return false;
 
-    const contract = new web3.eth.Contract(abi, '0x22B8DdeC5B2aa48FFf10cA52cAD21E4e845b4a37');
+    const contract = new web3.eth.Contract(abi, env === 'development' ? CONTRACT_ADDRESS_DEV : CONTRACT_ADDRESS_PROD);
 
     // @ts-ignore
     const result = await contract.methods.vote(name).send({from: accounts[0]});
