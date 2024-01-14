@@ -5,8 +5,8 @@ require('dotenv').config();
 const {abi} = config;
 
 // const wallet = new Wallet(process.env.PRIVATE_KEY as string, provider);
-const contractAddress= (process.env.NODE_ENV ==='development'?process.env.CONTRACT_ADDRESS_DEV: process.env.CONTRACT_ADDRESS_PROD ) as string;
-const provider = new ethers.JsonRpcProvider(process.env.NODE_ENV==='development'?process.env.RPC_ENDPOINT_DEV: process.env.RPC_ENDPOINT_PROD);
+const contractAddress= process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT as string);
 const votingContract = new ethers.Contract(contractAddress, abi, provider);
 
 
