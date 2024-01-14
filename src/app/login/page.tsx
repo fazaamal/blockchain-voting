@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast'
 import axios from '@/lib/axios'
 import { setAuthToken, setWalletAddress } from '@/lib/localStorage'
 import { connectAndSign } from '@/lib/web3'
+import { AxiosError, AxiosResponse } from 'axios'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -41,7 +42,7 @@ const Login = (props: Props) => {
     await axios.post('/login', {
       authentication: auth,
       walletAddress
-    }).then((res)=>{
+    }).then((res: AxiosResponse)=>{
       setAuthToken(res.headers['authorization']);
       setWalletAddress(walletAddress);
 
@@ -49,7 +50,7 @@ const Login = (props: Props) => {
 
       axios.post('/contract/has-voted', {
         walletAddress
-      }).then((res)=>{
+      }).then((res: AxiosResponse)=>{
         if(res.data.hasVoted) {
           toast({
             title: 'Error',
@@ -67,7 +68,7 @@ const Login = (props: Props) => {
 
         }
       })
-    }).catch((err)=>{
+    }).catch((err:AxiosError)=>{
       console.log(err);
 
       toast({

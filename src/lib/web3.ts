@@ -1,7 +1,10 @@
 import { AuthObject } from '@/app/types';
 import Web3 from 'web3';
 // import { ABI } from './ethers';
-import { abi } from './abi/VotingSystemAbi.json';
+
+import config from './abi/VotingSystemAbi.json'
+
+const abi = config.abi;
 
 export const connectAndSign = async (web3: Web3|null): Promise<AuthObject | false> => {
   try {

@@ -34,7 +34,8 @@ class AxiosInstance {
   }
 }
 
-export default new AxiosInstance();
+const axiosObj = new AxiosInstance();
+export default axiosObj;
 
 
 export {axiosInstance};

@@ -1,6 +1,8 @@
 import { ethers, Wallet } from 'ethers';
-import { abi } from './abi/VotingSystemAbi.json';
+import config from './abi/VotingSystemAbi.json'
 require('dotenv').config();
+
+const {abi} = config;
 
 // const wallet = new Wallet(process.env.PRIVATE_KEY as string, provider);
 const contractAddress= (process.env.NODE_ENV ==='development'?process.env.DEVELOPMENT_CONTRACT_ADDRESS: process.env.PRODUCTION_CONTRACT_ADDRESS ) as string;

@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { vote } from '@/lib/web3';
 import Web3 from 'web3';
+import { AxiosError, AxiosResponse } from 'axios';
 
 type Props = {}
 
@@ -28,7 +29,7 @@ const Page = (props: Props) => {
     axiosInstance.post('/verify-token', {
       authToken: getAuthToken(),
       walletAddress: getWalletAddress()
-    }).then((res)=>{
+    }).then((res: AxiosResponse)=>{
       if(!res.data.isAuthed) {
         toast({
           title: 'Error',
@@ -47,12 +48,12 @@ const Page = (props: Props) => {
 
     })
 
-    axiosInstance.get('/contract/get-candidates').then((res)=>{
+    axiosInstance.get('/contract/get-candidates').then((res: AxiosResponse)=>{
       setCandidates(res.data.candidates);
 
       console.log(res.data.candidates);
       
-    }).catch((err)=>{
+    }).catch((err: AxiosError)=>{
 
       console.warn(err);
 
@@ -61,8 +62,7 @@ const Page = (props: Props) => {
         description: err.message,
       })
     })
-  }
-  , []);
+  }, [ router, toast]);
 
   const handleSubmit = (data: any) => {
     console.log(data);
@@ -73,7 +73,7 @@ const Page = (props: Props) => {
         description: 'Voted successfully',
       })
 
-      router.push('/result')
+      router.push('/results')
       // console.log(res);
       
     }
@@ -101,9 +101,9 @@ const Page = (props: Props) => {
               <label htmlFor='candidate'>Choose Candidate</label>
               <select {...form.register('candidate')} className=' border-2 border-gray-300 rounded-md p-2'>
                 {
-                  candidates.map((candidate: any)=>{
+                  candidates.map((candidate: any, index)=>{
                     return (
-                      <option value={candidate}>{candidate}</option>
+                      <option key={index} value={candidate}>{candidate}</option>
                     )
                   })
                 }
