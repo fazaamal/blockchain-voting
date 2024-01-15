@@ -10,8 +10,6 @@ export type VoteCountObject = {
   maxVotes: number
 }
 
-export const fetchCache = 'force-no-store'
-
 export async function GET (request: NextRequest) {
   let candidatesList = await VotingContract.getCandidateList(); 
   let voteCounts: VoteCountObject['voteCounts'] = [];

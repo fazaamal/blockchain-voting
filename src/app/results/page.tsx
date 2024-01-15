@@ -8,6 +8,8 @@ import { AxiosResponse } from 'axios'
 
 type Props = {}
 
+export const fetchCache = 'force-no-store'
+
 const Page = (props: Props) => {
   const [ voteCounts, setVoteCounts] = useState<VoteCountObject>();
 
