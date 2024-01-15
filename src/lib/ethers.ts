@@ -6,8 +6,9 @@ const {abi} = config;
 
 export const fetchCache = 'force-no-store'
 // const wallet = new Wallet(process.env.PRIVATE_KEY as string, provider);
-const contractAddress= process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
-const provider = new ethers.JsonRpcProvider(process.env.RPC_ENDPOINT as string);
+const contractAddress= process.env.NODE_ENV ===  'test'?'0x800aE28599BD329DD83dAd79ad0d307dcaaCf075':process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+
+const provider = new ethers.JsonRpcProvider(process.env.NODE_ENV ===  'test'?'http://127.0.0.1:7545':process.env.RPC_ENDPOINT as string);
 const votingContract = new ethers.Contract(contractAddress, abi, provider);
 
 
