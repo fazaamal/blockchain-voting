@@ -31,37 +31,36 @@ export const connectAndSign = async (web3: Web3|null): Promise<AuthObject | fals
   }
 }
 
-export const vote = async (web3: Web3|null, name:string) => {
+export const vote = async (web3: Web3|null, name:string): Promise<{success:boolean, error:string|null}> => {
   try {
-    if(!web3) return false;
+    if(!web3) return {
+      success: false,
+      error: null
+    };
     await window.ethereum?.enable()
     const accounts = await web3?.eth.getAccounts();
     
-    if(accounts?.length === 0 || !accounts) return false;
+    if(accounts?.length === 0 || !accounts) return {
+      success: false,
+      error: null
+    };
 
     const contract = new web3.eth.Contract(abi, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
 
     // @ts-ignore
     const result = await contract.methods.vote(name).send({from: accounts[0]});
 
-    console.log(result);
-    
+    return {
+      success: true,
+      error: null
+    }
+  } catch (err: any) {
+    console.warn(`Error`, err);
 
-
-    // const signature = await web3?.eth.personal.sign(message, accounts[0], '');
-    // if(!signature) return false;
-
-    // if(accounts[0].toLowerCase() != await web3?.eth.accounts.recover(message, signature).toLowerCase()) throw new Error('Invalid signature');
-
-    // return {
-    //   message,
-    //   signature,
-    //   walletAddress: accounts[0],
-    // }
-  } catch (err) {
-    console.warn(`No accounts found`, err);
-
-    return false;
+    return {
+      success: false,
+      error: err.message
+    }
   }
 }
 

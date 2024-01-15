@@ -16,13 +16,16 @@ type Props = {}
 
 
 const Page = (props: Props) => {
+  // todo: disable button when vote clicked 
+
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm();
   const [ agree, setAgree ] = React.useState(false);
   const [ candidates, setCandidates ] = React.useState([]);
-  const [ web3, setWeb3 ] = React.useState<Web3|null>(null)
-
+  const [ web3, setWeb3 ] = React.useState<Web3|null>(null);
+  const [ loading, setLoading] = React.useState(false);
+ 
   useEffect(()=>{
     setWeb3(new Web3(window.ethereum));
 
@@ -65,15 +68,22 @@ const Page = (props: Props) => {
   }, [ router, toast]);
 
   const handleSubmit = (data: any) => {
-    console.log(data);
+
+    setLoading(true);
 
     vote(web3, data.candidate).then((res)=>{  
-      toast({
-        title: 'Success!',
-        description: 'Voted successfully',
-      })
-
-      router.push('/results')
+      if(res.success){
+        toast({
+          title: 'Success!',
+          description: 'Voted successfully',
+        })
+        
+        setLoading(false);
+  
+        router.push('/results');
+      }else{
+        throw {message: res.error}
+      } 
       // console.log(res);
       
     }
@@ -82,6 +92,8 @@ const Page = (props: Props) => {
         title: 'Error',
         description: err.message,
       })
+
+      setLoading(false)
     })
 
   }
@@ -115,7 +127,7 @@ const Page = (props: Props) => {
               <label className=' text-xs text-gray-700' htmlFor="terms">Do you understand this will change your future?</label>
             </div>
 
-            <Button disabled={!agree} className=' mt-2 relative left-1/2 -translate-x-1/2' type='submit'>VOTE</Button>
+            <Button disabled={!agree || loading} className=' mt-2 relative left-1/2 -translate-x-1/2' type='submit'>VOTE</Button>
           </form>
         </CardContent>
       </Card>
