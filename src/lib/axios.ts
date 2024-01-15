@@ -8,7 +8,7 @@ require('dotenv').config()
 const baseUrl = 'http://localhost:3001/api/'
 
 const axiosInstance =  axios.create({
-  baseURL: process.env.BASE_API_URL || window.location.origin + '/api',
+  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL || window.location.origin + '/api',
   headers: {
     'Content-Type': 'application/json'
   },
