@@ -17,7 +17,8 @@ const Page = (props: Props) => {
     fetch('/api/contract/vote-count', {
       next: {
         revalidate: 0
-      }
+      },
+      cache: 'reload'
     }).then(async (res:Response)=>{
       if(res.ok) setVoteCounts(await res.json())
     })
@@ -27,7 +28,8 @@ const Page = (props: Props) => {
       fetch('/api/contract/vote-count', {
         next: {
           revalidate: 0
-        }
+        },
+        cache: 'reload'
       }).then(async (res:Response)=>{
         if(res.ok) setVoteCounts(await res.json())
       })
