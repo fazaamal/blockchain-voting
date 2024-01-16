@@ -16,12 +16,12 @@ export async function POST (request: NextRequest) {
     return NextResponse.json({message: 'Invalid signature'}, { status: 401 });
   }
 
-  if(!await VotingContract.isVoterApproved(walletAddress)) {
-    return NextResponse.json({message: 'User not approved to vote; if registered please wait until approved'}, { status: 401 });
+  if(!await prisma.voter.findUnique({where: {walletAddress}})) {
+    return NextResponse.json({message: 'User not registered'}, { status: 401 });
   }
 
-  if(!await prisma.voter.findUnique({where: {walletAddress}})) {
-    return NextResponse.json({message: 'User not found'}, { status: 401 });
+  if(!await VotingContract.isVoterApproved(walletAddress)) {
+    return NextResponse.json({message: 'User not approved to vote; if registered please wait until approved'}, { status: 401 });
   }
 
   const token = JwtInstance.generateToken(walletAddress, 1);
