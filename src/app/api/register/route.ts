@@ -20,7 +20,7 @@ export async function POST (request: NextRequest) {
   }
   
   const votingContract = new VotingContract(process.env.PRIVATE_KEY as string);  
-  await votingContract.approveVoter(walletAddress);
+  await votingContract.approveVoter(walletAddress, 10);
 
   await prisma.voter.create({
     data: {

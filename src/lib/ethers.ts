@@ -1,4 +1,4 @@
-import { ethers, Wallet } from 'ethers';
+import { ethers, Wallet, parseUnits, formatUnits } from 'ethers';
 import config from './abi/VotingSystemAbi.json'
 require('dotenv').config();
 
@@ -9,6 +9,7 @@ export const fetchCache = 'force-no-store'
 const contractAddress= process.env.NODE_ENV ===  'test'?'0x800aE28599BD329DD83dAd79ad0d307dcaaCf075':process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
 
 const provider = new ethers.JsonRpcProvider(process.env.NODE_ENV ===  'test'?'http://127.0.0.1:7545':process.env.RPC_ENDPOINT as string);
+
 const votingContract = new ethers.Contract(contractAddress, abi, provider);
 
 
@@ -21,8 +22,15 @@ export class VotingContract {
     this.contract = new ethers.Contract(contractAddress, abi, wallet);
   }
 
-  async approveVoter ( walletAddress: string) {
-    return await this.contract.approveVoter(walletAddress);
+  async approveVoter ( walletAddress: string, additionalGasPrice?: number) {
+    let currGasPrice = await VotingContract.getGasPrice();
+
+    if(currGasPrice = 0)
+      return await this.contract.approveVoter(walletAddress);
+    else
+      return await this.contract.approveVoter(walletAddress, {
+        gasPrice: additionalGasPrice ? formatUnits(parseUnits((currGasPrice + additionalGasPrice).toString(), 'gwei'), 'ether') : null
+      });
   }
 
   async toggleVoting(){
@@ -35,6 +43,10 @@ export class VotingContract {
 
   async vote(name: string){
     return await this.contract.vote(name);
+  }
+
+  static async getGasPrice(): Promise<number> {
+    return parseFloat((await provider.getFeeData()).gasPrice?.toString() || '0');
   }
 
   static async admin(): Promise<string>{
