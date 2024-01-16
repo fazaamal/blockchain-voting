@@ -75,7 +75,7 @@ const Login = (props: Props) => {
 
       toast({
         title: 'Error',
-        description: err.message,
+        description: (err.response?.data as any).message || 'An error occured',
       })
     })
 
